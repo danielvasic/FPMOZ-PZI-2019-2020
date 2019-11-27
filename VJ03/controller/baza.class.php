@@ -1,15 +1,16 @@
 <?php
 class Baza {
-    private $host;
-    private $korisnik;
-    private $lozinka;
-    private $shema;
+    private $host = "localhost";
+    private $korisnik = "root";
+    private $lozinka = "";
+    private $shema = "pzi";
 
     private $konekcija;
 
     public function __construct (){
+
         $this->konekcija = new PDO(
-            "mysql:host=$this->host;dbname=$this->shema", 
+            "mysql:host=".$this->host.";dbname=".$this->shema, 
             $this->korisnik, 
             $this->lozinka
         );

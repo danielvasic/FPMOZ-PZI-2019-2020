@@ -9,10 +9,10 @@ class Login {
     public static function prijava ($korisnik){
         self::$baza = new Baza();
         $sql  = "SELECT id FROM korisnik";
-        $sql += " WHERE korisnickoime='" . $korisnik->getKorisnickoIme() . "'";
-        $sql += " AND lozinka='" . $korisnik->getLozinka() . "'";
+        $sql .= " WHERE korisnickoIme='" . $korisnik->getKorisnickoIme() . "'";
+        $sql .= " AND lozinka='" . $korisnik->getLozinka() . "'";
 
-        $konekcija = $baza->getKonekcija();
+        $konekcija = self::$baza->getKonekcija();
         $rezultat = $konekcija->query($sql);
 
         $korisnik = $rezultat->fetch();
