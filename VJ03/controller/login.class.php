@@ -1,13 +1,31 @@
 <?php
 session_start();
-include ("baza.class.php");
+include ("kontroler.class.php");
+include ("model/korisnik.class.php");
 
+class Login extends Kontroler {
+    public static $korisnik;
 
-class Login {
-    private static $baza;
+    public function index () {
+        if(isset($_POST["korisnickoime"])){
+            try {
+                $korisnik = new Korisnik($_POST["korisnickoime"], $_POST["lozinka"]);
+                self::prijava($korisnik);
+                print("Uspješna prijava");
+            } catch (Exception $e) {
+                $this->ucitaj(
+                    "login", 
+                    "pogled", 
+                    array("greska" => $e->getMessage())
+                );
+            }
+        } else {
+            $this->ucitaj("login", "pogled");
+        }
+        
+    }
 
     public static function prijava ($korisnik){
-        self::$baza = new Baza();
         $sql  = "SELECT id FROM korisnik";
         $sql .= " WHERE korisnickoIme='" . $korisnik->getKorisnickoIme() . "'";
         $sql .= " AND lozinka='" . $korisnik->getLozinka() . "'";
@@ -31,6 +49,26 @@ class Login {
     }
 
     public static function provjeri_prijavu (){
-        if (!self::$baza) self::$baza = new Baza();
+        $id = intval($_SESSION['id']);
+        $sql = "SELECT * FROM korisnik";
+        $sql += " WHERE id=" . $id;
+
+        $konekcija = self::$baza->getConnection();
+        $rezultat = $konekcija->query($sql);
+        $objekt = $rezultat->fetch();
+
+        if (count($objekt) == 0) {
+            throw new Exception("Nastala je pogreška: Korisnik nije prijavljen.");
+        } else {
+            self::$korisnik = new Korisnik(
+                $objekt["korisnickoime"],
+                $objekt["lozinka"],
+                $objekt["id"],
+                $objekt["ime"],
+                $objekt["prezime"],
+                $objekt["email"]
+            );
+        }
+
     }
 }

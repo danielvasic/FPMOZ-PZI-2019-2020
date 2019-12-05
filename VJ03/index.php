@@ -1,6 +1,7 @@
 <?php
-include ("model/korisnik.class.php");
-include ("controller/login.class.php");
+$kontroler = isset($_GET["kontroler"]) ? $_GET["kontroler"] : "login";
+$metoda = isset($_GET["metoda"]) ? $_GET["metoda"] : "index";
 
-$korisnik = new Korisnik("daniel", "123456");
-Login::prijava($korisnik);
+include ("controller/$kontroler.class.php");
+$objekt = new $kontroler();
+$objekt->$metoda();

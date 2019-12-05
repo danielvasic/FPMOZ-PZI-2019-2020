@@ -8,7 +8,7 @@ class Korisnik {
     private $prezime;
     private $email;
 
-    public function __construct ($korisnickoime, $lozinka){
+    public function __construct ($korisnickoime, $lozinka, $id=0, $ime="", $prezime="", $email=""){
         $this->korisnickoime = $korisnickoime;
         $this->lozinka = md5($lozinka);
     }
