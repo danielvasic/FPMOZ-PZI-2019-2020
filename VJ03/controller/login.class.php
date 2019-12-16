@@ -1,26 +1,33 @@
 <?php
 session_start();
 include ("kontroler.class.php");
-include ("model/korisnik.class.php");
 
 class Login extends Kontroler {
     public static $korisnik;
+
+    public function __construct () {
+        $this->ucitaj("korisnik", "model");
+    }
 
     public function index () {
         if(isset($_POST["korisnickoime"])){
             try {
                 $korisnik = new Korisnik($_POST["korisnickoime"], $_POST["lozinka"]);
                 self::prijava($korisnik);
-                print("Uspješna prijava");
+                header("Location: index.php?kontroler=profil&metoda=index");
             } catch (Exception $e) {
+                $this->ucitaj("static/header", "pogled", array("naslov" => "Prijava na sustav"));
                 $this->ucitaj(
                     "login", 
                     "pogled", 
                     array("greska" => $e->getMessage())
                 );
+                $this->ucitaj("static/footer", "pogled");
             }
         } else {
+            $this->ucitaj("static/header", "pogled", array("naslov" => "Prijava na sustav"));
             $this->ucitaj("login", "pogled");
+            $this->ucitaj("static/footer", "pogled");
         }
         
     }
@@ -49,11 +56,12 @@ class Login extends Kontroler {
     }
 
     public static function provjeri_prijavu (){
+        include ("model/korisnik.class.php");
         $id = intval($_SESSION['id']);
         $sql = "SELECT * FROM korisnik";
-        $sql += " WHERE id=" . $id;
+        $sql .= " WHERE id=" . $id;
 
-        $konekcija = self::$baza->getConnection();
+        $konekcija = self::$baza->getKonekcija();
         $rezultat = $konekcija->query($sql);
         $objekt = $rezultat->fetch();
 
@@ -61,7 +69,7 @@ class Login extends Kontroler {
             throw new Exception("Nastala je pogreška: Korisnik nije prijavljen.");
         } else {
             self::$korisnik = new Korisnik(
-                $objekt["korisnickoime"],
+                $objekt["korisnickoIme"],
                 $objekt["lozinka"],
                 $objekt["id"],
                 $objekt["ime"],

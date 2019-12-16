@@ -1,4 +1,4 @@
-    <main class="login-form mt-5">
+<main class="login-form mt-5">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-8">
@@ -11,7 +11,25 @@
                                 <p><?php echo $greska; ?></p>
                             </div>
                             <?php } ?>
-                            <form action="index.php?kontroler=login&metoda=index" method="POST">
+                            <form action="index.php?kontroler=registracija&metoda=index" method="POST">
+                                <div class="form-group row">
+                                    <label for="ime" class="col-md-4 col-form-label text-md-right">Ime</label>
+                                    <div class="col-md-6">
+                                        <input type="text" id="ime" class="form-control" name="ime" required autofocus>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="prezime" class="col-md-4 col-form-label text-md-right">Prezime</label>
+                                    <div class="col-md-6">
+                                        <input type="text" id="prezime" class="form-control" name="prezime" required autofocus>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
+                                    <div class="col-md-6">
+                                        <input type="email" id="email" class="form-control" name="email" required autofocus>
+                                    </div>
+                                </div>
                                 <div class="form-group row">
                                     <label for="korisnickoime" class="col-md-4 col-form-label text-md-right">Korisničko ime</label>
                                     <div class="col-md-6">
@@ -28,11 +46,11 @@
                                 
                                 <div class="col-md-6 offset-md-4">
                                     <button type="submit" class="btn btn-primary">
-                                        Prijavite se
+                                        Registrirajte se
                                     </button>
                                 </div>
                                 <div class="form-group row">
-                                    <p class="col-md-12 col-form-label text-md-left">Nemate račun? <a href="index.php?kontroler=registracija&metoda=index">Napravite ga.</a></p>
+                                    <p class="col-md-12 col-form-label text-md-left">Imate račun? <a href="index.php?kontroler=login&metoda=index">Prijavite se.</a></p>
                                 </div>
                             </form>
                         </div>
