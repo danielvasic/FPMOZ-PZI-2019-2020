@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Ovo je neki tekst</title>
+        <script>
+            var url = "http://smart.sum.ba/parking?withParkingSpaces=1";
+
+            function toogleParagraf () {
+                var paragraf = document.getElementById("paragraf");
+                if (paragraf.style.display == "none"){
+                    paragraf.style.display = "block";
+                } else {
+                    paragraf.style.display = "none";
+                }
+            }
+
+            function getParking(url){
+                var paragraf = document.getElementById("paragraf");
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200){
+                        var parking = JSON.parse(xhr.responseText)[0];
+                        paragraf.innerHTML = parking.name
+                        paragraf.innerHTML += ", broj slobodnih mjesta - ";
+                        paragraf.innerHTML += parking.normal_available;
+                    }
+                }
+                xhr.open("GET", url, true);
+                xhr.send();
+            }
+        </script>
+    </head>
+    <body>
+        <p id="paragraf">Ovo je neki tekst</p>
+        <button onclick="getParking(url)">Pozovi me</button>
+    </body>
+</html>
