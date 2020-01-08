@@ -12,3 +12,31 @@
     </ul>
   </div>
 </nav>
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <table class="table">
+        <tr>
+          <td>Id</td>
+          <td><?php echo ($korisnik->getId()) ?></td>
+        </tr>
+
+        <tr>
+          <td>Ime</td>
+          <td><?php echo ($korisnik->getIme()) ?></td>
+        </tr>
+
+        <tr>
+          <td>Prezime</td>
+          <td><?php echo ($korisnik->getPrezime()) ?></td>
+        </tr>
+
+        <tr>
+          <td>Email</td>
+          <td><?php echo ($korisnik->getEmail()) ?></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
