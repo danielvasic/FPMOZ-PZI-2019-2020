@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js"></script>
+
+<body ng-app="SmartSum">
+    <div class="container">
+        <div ng-controller="Parking" class="row">
+            <div class="col-2 mb-2" ng-repeat="parkingSpace in parkingSpaces">
+                <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{parkingSpace.parking_space_name}}</h5>
+                            <p class="card-text">Parking je <span class="badge badge-success" ng-if="parkingSpace.occupied == 0">slobodan</span><span class="badge badge-danger" ng-if="parkingSpace.occupied == 1">zauzet</span>.</p>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var url = "http://smart.sum.ba/parking?withParkingSpaces=1";
+        
+        var app = angular.module("SmartSum", []);
+        app.controller('Parking', ["$scope", "$http", "socket", function($scope, $http, socket) {
+            $http.get(url)
+            .then(function(response) {
+                $scope.parkingSpaces = response.data[0].parkingSpaces;
+            });
+            socket.on("parking-lot-state-change", function(data){
+                $scope.parkingSpaces.find(x => x.id === data.id_parking_space).occupied = data.occupied;
+                console.log(data)
+            })
+        }]);
+
+        app.factory('socket', ["$rootScope", function ($rootScope){
+            var socket = io('http://smart.sum.ba/parking-events');
+            return {
+                on: function(evtName, callback){
+                    socket.on(evtName, function () {
+                        var args = arguments;
+                        $rootScope.$apply(function(){
+                            callback.apply(socket, args);
+                        })
+                    });
+                }
+            }
+        }]);
+
+        
+
+       
+    </script>
+
+</body>
+</html>

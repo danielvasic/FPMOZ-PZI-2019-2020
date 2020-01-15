@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js"></script>
+
+<body>
+    <div ng-app="SmartSum" ng-controller="Parking">
+        <ul>
+            <li ng-repeat="parkingSpace in parkingSpaces">
+                {{parkingSpace.parking_space_name}} 
+                <span ng-if="parkingSpace.occupied==1" style="color: red">Zauzeto</span>
+                <span ng-if="parkingSpace.occupied==0" style="color: green">Slobodno</span>
+            </li>
+        </ul>
+    </div>
+    <script>
+        var url = "http://smart.sum.ba/parking?withParkingSpaces=1";
+
+        var app = angular.module("SmartSum", []);
+
+        app.controller("Parking", ["$scope", "$http", "socket", function ($scope, $http, socket){
+            $http.get(url).then(
+                function(data){
+                    $scope.parkingSpaces = data.data[0].parkingSpaces
+                }
+            );
+            
+            socket.on("parking-lot-state-change", function (data){
+                $scope.parkingSpaces.find(
+                    x => x.id===data.id_parking_space
+                ).occupied = data.occupied;
+                console.log(data);
+            });
+        }]);
+
+        app.factory ("socket", ["$rootScope", function ($rootScope){
+            var socket = io("http://smart.sum.ba/parking-events");
+            return {
+                on : function (evtName, callback){
+                    socket.on(evtName, function (){
+                        var args = arguments;
+                        $rootScope.$apply(function(){
+                            callback.apply(socket, args)
+                        })
+                    })
+                }
+            }
+        }])
+    </script>
+</body>
+</html>
