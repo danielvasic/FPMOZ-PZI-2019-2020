@@ -4,6 +4,7 @@ Prijaviti se na studenti.sum.ba posluzitelj
 Username: fpmozXXYYYY Password: csgiditalYYYY
 
 Adresa projekta za grupu je: http://studenti.sum.ba/projekti/fpmoz/YYYY/gX
+Pristup bazi je kroz phpmyadmin sučelje: http://studenti.sum.ba/phpmyadmin
 
 *( XX broj grupe, YYYY godina)
 
